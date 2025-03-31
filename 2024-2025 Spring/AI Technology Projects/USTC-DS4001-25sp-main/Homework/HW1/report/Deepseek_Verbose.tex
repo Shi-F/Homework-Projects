@@ -1,0 +1,211 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+在提供的Python代码中，\texttt{verbose}变量用于控制算法执行时的详细输出级别。它的作用和具体含义如下：
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{\texorpdfstring{\textbf{功能解释}}{功能解释}}\label{header-n4}
+
+\texttt{verbose} 是一个
+\textbf{整数参数}，决定了算法执行过程中输出信息的详细程度。数值越大，输出的调试或中间信息越详细。
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{\texorpdfstring{\textbf{具体行为}}{具体行为}}\label{header-n7}
+
+在代码中，\texttt{verbose} 的值通过以下条件触发不同级别的输出：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{当 \texttt{verbose\ \textgreater{}=\ 1} 时}：
+
+  \begin{itemize}
+  \item
+    算法结束时会打印全局信息，例如：
+
+    \begin{itemize}
+    \item
+      \texttt{Searched\ the\ entire\ search\ space!}（当搜索空间完全探索完毕时）。
+    \item
+      解决问题后的统计信息：探索的状态数、路径成本、动作序列（如
+      \texttt{numStatesExplored}, \texttt{pathCost},
+      \texttt{actions}）。
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{当 \texttt{verbose\ \textgreater{}=\ 2} 时}：
+
+  \begin{itemize}
+  \item
+    每次探索一个新状态时，会打印当前状态及其累计成本（如
+    \texttt{Exploring\ \{state\}\ with\ pastCost\ \{pastCost\}}）。
+  \end{itemize}
+\item
+  \textbf{当 \texttt{verbose\ \textgreater{}=\ 3} 时}：
+
+  \begin{itemize}
+  \item
+    每次尝试从当前状态转移到新状态时，会详细输出转移的路径和成本增量（如
+    \texttt{\{state\}\ =\textgreater{}\ \{newState\}\ (Cost:\ \{pastCost\}\ +\ \{cost\})}）。
+  \end{itemize}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{\texorpdfstring{\textbf{代码中的关键位置}}{代码中的关键位置}}\label{header-n31}
+
+\begin{itemize}
+\item
+  \textbf{初始化}：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def} \FunctionTok{\_\_init\_\_}\NormalTok{(}\VariableTok{self}\NormalTok{, verbose: }\BuiltInTok{int} \OperatorTok{=} \DecValTok{0}\NormalTok{):}
+    \VariableTok{self}\NormalTok{.verbose }\OperatorTok{=}\NormalTok{ verbose}
+\end{Highlighting}
+\end{Shaded}
+
+  默认值为 \texttt{0}，即默认不输出任何调试信息。
+\item
+  \textbf{主要输出触发点}：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if} \VariableTok{self}\NormalTok{.verbose }\OperatorTok{\textgreater{}=} \DecValTok{1}\NormalTok{:}
+    \BuiltInTok{print}\NormalTok{(}\StringTok{"Searched the entire search space!"}\NormalTok{)  }\CommentTok{\# 搜索结束时的全局信息}
+\ControlFlowTok{if} \VariableTok{self}\NormalTok{.verbose }\OperatorTok{\textgreater{}=} \DecValTok{2}\NormalTok{:}
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Exploring }\SpecialCharTok{\{}\NormalTok{state}\SpecialCharTok{\}}\SpecialStringTok{ with pastCost }\SpecialCharTok{\{}\NormalTok{pastCost}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{)  }\CommentTok{\# 每次探索状态的信息}
+\ControlFlowTok{if} \VariableTok{self}\NormalTok{.verbose }\OperatorTok{\textgreater{}=} \DecValTok{3}\NormalTok{:}
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"}\CharTok{\textbackslash{}t}\SpecialCharTok{\{}\NormalTok{state}\SpecialCharTok{\}}\SpecialStringTok{ =\textgreater{} }\SpecialCharTok{\{}\NormalTok{newState}\SpecialCharTok{\}}\SpecialStringTok{ (Cost: }\SpecialCharTok{\{}\NormalTok{pastCost}\SpecialCharTok{\}}\SpecialStringTok{ + }\SpecialCharTok{\{}\NormalTok{cost}\SpecialCharTok{\}}\SpecialStringTok{)"}\NormalTok{)  }\CommentTok{\# 每次转移的详细信息}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{\texorpdfstring{\textbf{使用场景}}{使用场景}}\label{header-n41}
+
+\begin{itemize}
+\item
+  \textbf{调试}：通过设置 \texttt{verbose=3}
+  可以查看算法的每一步执行细节，便于排查问题。
+\item
+  \textbf{性能分析}：\texttt{verbose=1}
+  可显示总探索状态数和路径成本，帮助评估算法效率。
+\item
+  \textbf{教学演示}：通过不同级别输出，逐步展示算法的执行过程。
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{\texorpdfstring{\textbf{总结}}{总结}}\label{header-n50}
+
+\begin{itemize}
+\item
+  \textbf{\texttt{verbose} 的值控制输出的详细程度}：
+
+  \begin{itemize}
+  \item
+    \texttt{0}：完全静默，无任何输出。
+  \item
+    \texttt{1}：输出关键结果（如路径、成本、状态数）。
+  \item
+    \texttt{2}：输出每一步探索的状态。
+  \item
+    \texttt{3}：输出每一步转移的详细信息。
+  \end{itemize}
+\item
+  这种设计使得算法在不同场景下（如生产环境、调试、教学）能够灵活控制信息的输出，提升了代码的可调试性和可观察性。
+\end{itemize}
+
+\end{document}

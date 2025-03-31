@@ -1,0 +1,11 @@
+\begin{thebibliography}{1}
+
+\bibitem{Brook2014}
+Brook\_icv, ``Opencv2: 等间隔采样和局部均值的图像缩小,'' 2014.
+
+\bibitem{Avidan2007}
+S.~Avidan and A.~Shamir, ``Seam carving for content-aware image resizing,''
+  {\em ACM Transactions on Graphics}, vol.~26, no.~3, 2007.
+\newblock Cited by: 1085.
+
+\end{thebibliography}
