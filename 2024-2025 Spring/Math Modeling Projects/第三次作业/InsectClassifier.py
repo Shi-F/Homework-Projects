@@ -4,6 +4,7 @@ import torch.optim as optim
 import torch.utils.data as data
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # 配置参数
 config = {
@@ -25,12 +26,12 @@ class InsectDataset(data.Dataset):
     """
     def __init__(self, filepath):
         # 从文本文件中读入数据
-        xy = np.loadtxt(fname=filepath, delimiter=' ', dtype=np.float32, encoding='utf-8')
-        self.len = xy.shape[0]
+        self.xy = np.loadtxt(fname=filepath, delimiter=' ', dtype=np.float32, encoding='utf-8')
+        self.len = self.xy.shape[0]
 
         # 特征与标签
-        self.X = xy[:, :2].astype(np.float32)
-        self.y = xy[:, [-1]].astype(np.int64).flatten()
+        self.X = self.xy[:, :2].astype(np.float32)
+        self.y = self.xy[:, [-1]].astype(np.int64).flatten()
         
 
     def __len__(self):
@@ -42,6 +43,28 @@ class InsectDataset(data.Dataset):
             torch.tensor(self.X[index]),
             torch.tensor(self.y[index])
         )
+    
+    def plot_points(self):
+        """
+        绘制数据散点图
+        """
+        points = {0: {"x":[], "y":[]}, 1: {"x":[], "y":[]}, 2: {"x":[], "y":[]}}
+        for row in self.xy:
+            points[int(row[2])]["x"].append(row[0])
+            points[int(row[2])]["y"].append(row[1])
+        
+        plt.figure(figsize=(8, 5))
+        plt.scatter(points[0]["x"], points[0]["y"], color="blue", label="type0", s=10)
+        plt.scatter(points[1]["x"], points[1]["y"], color="red", label="type1", s=10)
+        plt.scatter(points[2]["x"], points[2]["y"], color="green", label="type2", s=10)
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title("Data Points")
+        plt.legend()
+        plt.grid(True)
+        plt.show()      
+
+            
     
 class FNN(nn.Module):
     """
@@ -91,6 +114,10 @@ class Trainer:
         self.train_accuracy = []
         self.test_accuracy = []
 
+        # 记录最后一次训练和测试的结果
+        self.train_result = {}
+        self.test_result = {}
+
     def train(self):
         """
         训练模型
@@ -114,6 +141,11 @@ class Trainer:
                 train_correct += (predicted == batch_y).sum().item()
                 train_total += len(batch_y)
 
+                # 记录最后一次训练的结果
+                if epoch == self.epochs - 1:
+                    for i in range(len(batch_y)):
+                        self.train_result[tuple(batch_X[i].tolist())] = (predicted[i] == batch_y[i]).item()
+
             # 计算训练误差
             avg_train_loss = total_loss / len(self.train_loader)
             self.train_losses.append(avg_train_loss)
@@ -130,7 +162,7 @@ class Trainer:
             if (epoch + 1) % config["loss_print_frequency"] == 0:
                 print(f"Epoch [{epoch+1}/{self.epochs}], Train Loss: {avg_train_loss:.4f}, Test Loss: {avg_test_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Test Accuracy: {self.test_accuracy[epoch]:.2f}%")
 
-    def evaluate(self):
+    def evaluate(self, final = False):
         """
         在测试集上评估模型
         """
@@ -149,6 +181,11 @@ class Trainer:
                 test_correct += (predicted == batch_y).sum().item()
                 test_total += len(batch_y)
 
+                # 记录最后一次测试的结果
+                if final == True:
+                    for i in range(len(batch_y)):
+                        self.test_result[tuple(batch_X[i].tolist())] = (predicted[i] == batch_y[i]).item()
+
             avg_loss = total_loss / len(self.test_loader)
 
             test_accuracy = test_correct / test_total * 100
@@ -160,7 +197,7 @@ class Trainer:
         """
         打印在测试集上的最终表现
         """
-        avg_test_loss = self.evaluate()
+        avg_test_loss = self.evaluate(final=True)
         print(f"Final Test Loss: {avg_test_loss:.4f}, Final Test Accuracy: {self.test_accuracy[config['num_epochs']]:.2f}%")
 
     def plot_losses_and_accuracy(self):
@@ -181,10 +218,32 @@ class Trainer:
         plt.plot(range(1, self.epochs + 1), self.test_accuracy[0:config["num_epochs"]], label="Test Accuracy", color='red')
         plt.xlabel("Epoch")
         plt.ylabel("Accuracy")
-        plt.title("Testing Accuracy Curve")
+        plt.title("Training and Testing Accuracy Curve")
         plt.legend()
         plt.grid()
 
+        plt.show()      
+
+    def plot_result(self):
+        """
+        绘制训练结果、测试结果散点图
+        """
+        plt.figure(figsize=(8, 5))
+        for position, result in self.train_result.items():
+            plt.scatter(position[0], position[1], color=("black" if result else "red"), s=10)
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title("Train Result")
+        plt.grid(True)
+        plt.show()
+
+        plt.figure(figsize=(8, 5))
+        for position, result in self.test_result.items():
+            plt.scatter(position[0], position[1], color=("black" if result else "red"), s=10)
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title("Test Result")
+        plt.grid(True)
         plt.show()      
 
 # 主程序
@@ -192,6 +251,10 @@ if __name__ == "__main__":
     # 创建数据集
     train_dataset = InsectDataset(config["train_path"])
     test_dataset = InsectDataset(config["test_path"])
+
+    # 绘制数据散点图
+    train_dataset.plot_points()
+    test_dataset.plot_points()
 
     # 创建数据加载器
     train_loader = data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
@@ -204,10 +267,16 @@ if __name__ == "__main__":
     trainer = Trainer(model, train_loader, test_loader, device=config["device"], lr=config["learning_rate"],epochs=config["num_epochs"])
 
     # 训练模型
+    start_time = time.time() # 记录起始时间
     trainer.train()
+    end_time = time.time()
+    print(f"Running time: {end_time - start_time:.2f}s.")
 
     # 评估模型
     trainer.final_performance()
 
     # 绘制误差曲线和准确率曲线
     trainer.plot_losses_and_accuracy()
+
+    # 绘制结果散点图
+    trainer.plot_result()
