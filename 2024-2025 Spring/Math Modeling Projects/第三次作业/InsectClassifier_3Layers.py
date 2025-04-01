@@ -12,10 +12,11 @@ config = {
     "test_path": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-2-testing.txt",
     "batch_size": 32,
     "input_dim": 2,
-    "hidden_size": 64,
+    "hidden_size": [128, 64, 32],
+    "num_layers": 3,
     "num_classes": 3,
     "learning_rate": 0.001,
-    "num_epochs": 300,
+    "num_epochs": 100,
     "loss_print_frequency": 1,
     "device": torch.device("cuda" if torch.cuda.is_available() else "cpu")
 }
@@ -75,9 +76,11 @@ class FNN(nn.Module):
         初始化结构：全连接的输入层+单个隐藏层+输出层
         """
         super(FNN, self).__init__()
-        self.fc1 = nn.Linear(input_dim, config["hidden_size"]) # 输入层到隐藏层
+        self.fc1 = nn.Linear(input_dim, config["hidden_size"][0]) # 输入层到隐藏层
         self.relu = nn.ReLU() # ReLU激活函数
-        self.fc2 = nn.Linear(config["hidden_size"], config["num_classes"]) # 隐藏层到输出层
+        self.fc2 = nn.Linear(config["hidden_size"][0], config["hidden_size"][1]) # 隐藏层到第二隐藏层
+        self.fc3 = nn.Linear(config["hidden_size"][1], config["hidden_size"][2]) # 第二隐藏层到第三隐藏层
+        self.fc4 = nn.Linear(config["hidden_size"][2], config["num_classes"]) # 第三隐藏层到输出层
 
     def forward(self, x):
         """
@@ -86,6 +89,10 @@ class FNN(nn.Module):
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
+        x = self.relu(x)
+        x = self.fc4(x)
         return x
     
 class Trainer:
