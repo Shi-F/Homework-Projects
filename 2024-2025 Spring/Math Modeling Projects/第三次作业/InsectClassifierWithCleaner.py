@@ -4,14 +4,15 @@ import torch.optim as optim
 import torch.utils.data as data
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score
+from CleanlabForInsectClassifier import Cleaner
 import numpy as np
 import time
 
 # 配置参数
 config = {
-    "train_path": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-training.txt",
-    "test_path_fromtrain": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-testing-fromtrain.txt",
-    "test_path_new": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-testing-new.txt",   
+    "train_path": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-2-training.txt",
+    "test_path_fromtrain": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-2-testing-fromtrain.txt",
+    "test_path_new": r"F:\2024-2025春季学期\数学建模\第三次作业\insects-2-testing-new.txt",   
     "batch_size": 32,
     "input_dim": 2,
     "hidden_size": 64,
@@ -65,7 +66,21 @@ class InsectDataset(data.Dataset):
         plt.legend()
         plt.grid(True)   
 
-            
+    def clean_self(self):
+        """
+        清理数据集内的可疑噪声
+        """
+        cleaner = Cleaner(train_dataset)
+        cleaner.pretrain()
+        cleaner.find_issues()
+        cleaner.show_issues()
+
+        mask = ~cleaner.issues
+        self.X = self.X[mask]
+        self.y = self.y[mask]
+        self.xy = self.xy[mask]
+        self.len = self.X.shape[0]
+        print("Cleaning finished.")
     
 class FNN(nn.Module):
     """
@@ -301,6 +316,10 @@ if __name__ == "__main__":
     test_fromtrain_dataset.plot_points()
     test_new_dataset.plot_points()
 
+    # 清理训练数据集内噪声
+    train_dataset.clean_self()
+    train_dataset.plot_points()
+
     # 创建数据加载器
     train_loader = data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
     test_loader_fromtrain = data.DataLoader(test_fromtrain_dataset, batch_size=config["batch_size"], shuffle=False)
@@ -327,4 +346,4 @@ if __name__ == "__main__":
     # 绘制训练与测试结果散点图
     trainer.plot_result()
 
-    plt.show() # 统一显示所有图像
+    plt.show()
