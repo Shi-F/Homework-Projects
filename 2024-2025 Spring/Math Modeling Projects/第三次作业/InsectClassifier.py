@@ -18,7 +18,7 @@ config = {
     "num_classes": 3,
     "learning_rate": 0.001,
     "num_epochs": 100,
-    "loss_print_frequency": 1,
+    "loss_print_frequency": 10,
     "device": torch.device("cuda" if torch.cuda.is_available() else "cpu")
 }
 
@@ -29,6 +29,9 @@ class InsectDataset(data.Dataset):
     def __init__(self, filepath):
         # 从文本文件中读入数据
         self.xy = np.loadtxt(fname=filepath, delimiter=' ', dtype=np.float32, encoding='utf-8')
+        sorted_indices = np.argsort(self.xy[:, 0])
+        self.xy = self.xy[sorted_indices]
+        # 作排序仅为方便可视化结果，与训练无关
         self.len = self.xy.shape[0]
 
         # 特征与标签
@@ -167,7 +170,7 @@ class Trainer:
                 avg_test_loss_new = self.evaluate(set="new",final=False)
                 self.test_losses_new.append(avg_test_loss_new)
 
-            # 每轮打印一次损失
+            # 每10轮打印一次损失
             if (epoch + 1) % config["loss_print_frequency"] == 0 and verbose:
                 print(f"Epoch [{epoch+1}/{self.epochs}], Train Loss: {avg_train_loss:.4f}, Test Loss(data from trainset): {avg_test_loss_fromtrain:.4f}, Test Loss(new data): {avg_test_loss_new:.4f}")
                 print(f"Train Accuracy: {train_accuracy:.2f}%, Test Accuracy(data from trainset): {self.test_accuracy_fromtrain[epoch]:.2f}%, Test Accuracy(new data): {self.test_accuracy_new[epoch]:.2f}%")
@@ -220,7 +223,7 @@ class Trainer:
             else:
                 self.test_accuracy_new.append(test_accuracy)
 
-            if final and set == "new":
+            if final:
                 self.test_auc = roc_auc_score(labels, predictions, multi_class='ovr')
 
         return avg_loss
@@ -230,7 +233,7 @@ class Trainer:
         打印在测试集上的最终表现
         """
         avg_test_loss = self.evaluate(set="fromtrain",final=True)
-        print(f"Final Test Loss(data from trainset): {avg_test_loss:.4f}, Final Test Accuracy(data from trainset): {self.test_accuracy_fromtrain[config['num_epochs']]:.2f}%")
+        print(f"Final Test Loss(data from trainset): {avg_test_loss:.4f}, Final Test Accuracy(data from trainset): {self.test_accuracy_fromtrain[config['num_epochs']]:.2f}%, AUC:{self.test_auc*100:.2f}%")
 
         avg_test_loss = self.evaluate(set="new",final=True)
         print(f"Final Test Loss(new data): {avg_test_loss:.4f}, Final Test Accuracy(new data): {self.test_accuracy_new[config['num_epochs']]:.2f}%, AUC:{self.test_auc*100:.2f}%")

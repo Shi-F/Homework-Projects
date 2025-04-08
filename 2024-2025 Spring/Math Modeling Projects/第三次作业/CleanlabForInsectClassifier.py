@@ -17,51 +17,52 @@ class Cleaner:
     """
     基于Cleanlab库处理多分类数据集中的噪声标签
     """
-    def __init__(self, dataset: InsectDataset):
-        self.dataset = dataset
-        self.len = dataset.X.shape[0]
-        self.input_dim = dataset.X.shape[1]
+    def __init__(self):
+        pass
 
-    def pretrain(self):
+    def pretrain(self, dataset:InsectDataset):
         """
         在数据集上预训练一个FNN模型
         """
         # 创建数据加载器
-        train_loader = data.DataLoader(self.dataset, batch_size=config["batch_size"], shuffle=True)
+        train_loader = data.DataLoader(dataset, batch_size=config["batch_size"], shuffle=True)
         # 初始化模型
-        model = FNN(input_dim=self.input_dim)
+        model = FNN(input_dim=dataset.X.shape[1])
         # 训练器
         trainer = Trainer(model, train_loader, None, None, device=config["device"], lr=config["learning_rate"],epochs=config["num_epochs"])
         # 训练模型
         trainer.train(verbose=False)
         self.model = trainer.model
 
-    def find_issues(self):
+    def find_issues(self, dataset:InsectDataset, show=False):
         """
-        利用Cleanlab库的方法找到可能有问题的标签
+        利用Cleanlab库的方法找到可能有问题的标签，并可视化结果（可选）
         """
         self.model.eval()
         with torch.no_grad():
-            X_train = torch.tensor(self.dataset.X)
-            y_train = self.dataset.y
+            X_train = torch.tensor(dataset.X)
+            y_train = dataset.y
             prob = torch.softmax(self.model(X_train), dim=1).numpy()
         issues = find_label_issues(
             labels=y_train,
             pred_probs=prob,
+            frac_noise=2.0
         )
 
         # 输出结果
         print(f"find {issues.sum()} probable issues!")
-        self.issues = issues
+        if show:
+            self.show_issues(dataset=dataset, issues=issues)
+        return issues
     
-    def show_issues(self):
+    def show_issues(self, dataset:InsectDataset, issues):
         """
         绘制数据散点图
         """
         points = {0: {"x":[], "y":[]}, 1: {"x":[], "y":[]}, 2: {"x":[], "y":[]}, "issue":{"x":[], "y":[]}}
-        for i in range(self.len):
-            row = self.dataset.xy[i]
-            if not self.issues[i]:
+        for i in range(dataset.len):
+            row = dataset.xy[i]
+            if not issues[i]:
                 points[int(row[2])]["x"].append(row[0])
                 points[int(row[2])]["y"].append(row[1])
             else:
