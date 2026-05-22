@@ -1,0 +1,2 @@
+F:\2024-2025春季学期\数学建模\大作业\data\real\28S ribosomal protein S34, mitochondrial length_218.pdb
+F:\2024-2025春季学期\数学建模\大作业\data\real\KunitzBovine pancreatic trypsin inhibitor domain protein length_70.pdb
