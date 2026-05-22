@@ -1,0 +1,10 @@
+压缩包中包含的文件介绍：
+InsectClassifier.py：基础模型（FNN）
+InsectClassifierWithCleaner.py：基于模型预测去噪后的分类器
+CleanlabForInsectClassifier.py：模型预测去噪方法
+InsectClassifierWithKMeans.py：基于KMeans聚类去噪后的分类器
+KMeansForInsectClassifier：KMeans聚类去噪方法
+data：存放数据文本
+	training：训练集
+	testing-fromtrain：从训练集中选取的测试集
+	testing-new：新数据组成的测试集
